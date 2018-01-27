@@ -13,38 +13,19 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-'''
-@app.route('/')
-def catalog():
-    query = session.query(Category)
-    output = ''
-    for i in query:
-        output += '</br>'
-        output += i.name
-        output += " " + str(i.id)
-        output += '</br>'
-    return output
 
-@app.route('/category/<int:category_id>/')
-def catalogList(category_id):
-    cat= session.query(Category).filter_by(id=category_id).one()
-    categoryItems=session.query(CategoryItem).filter_by(category_id=cat.id)
-    output = ''
-    for i in categoryItems:
-        output += i.name
-        output += '</br>'
-        output += i.description
-        output += '</br>'
-        output += '</br>'
-    return output
-    '''
-#Show all restaurants
+#Show all categories
 @app.route('/')
 @app.route('/catalog/')
 def showCategories():
-  catalog = session.query(Category).order_by(asc(Category.name))
-  return render_template('catalog.html', catalog = catalog)
+    catalog = session.query(Category).order_by(asc(Category.id))
+    itemsList = session.query(CategoryItem).filter_by(category_id = 1).all()
+    return render_template('catalog.html', categoryItems = itemsList, catalog = catalog)
 
+@app.route('/catalog/<int:category_id>/')
+def showItems(category_id):
+    itemsList = session.query(CategoryItem).filter_by(category_id = category_id).all()
+    return render_template('catalog.html', categoryItems = itemsList)
 
 if __name__ == '__main__':
     app.debug = True

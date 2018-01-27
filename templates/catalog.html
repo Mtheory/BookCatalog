@@ -23,9 +23,9 @@
                 <h4>Categories</h4>
                 <div class="list-group">
                     {% for category in catalog %}
-                    <a href="#"
+                    <a href="{{url_for('showItems', category_id = category.id )}}"
                     class="list-group-item">
-                    {{category.name}}<span class="badge">5</span></a>
+                    {{category.name}}</a>
                     {% endfor %}
                 </div>
             </div>
@@ -39,30 +39,12 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>John</td>
-                    <td>Doe</td>
-                  </tr>
-                  <tr>
-                    <td>Mary</td>
-                    <td>Moe</td>
-                  </tr>
-                  <tr>
-                    <td>July</td>
-                    <td>Dooley</td>
-                  </tr>
-                  <tr>
-                    <td>John</td>
-                    <td>Doe</td>
-                  </tr>
-                  <tr>
-                    <td>Mary</td>
-                    <td>Moe</td>
-                  </tr>
-                  <tr>
-                    <td>July</td>
-                    <td>Dooley</td>
-                  </tr>
+                    {% for i in categoryItems %}
+                    <tr>
+                        <td>{{i.name}}</td>
+                        <td>{{i.author}}</td>
+                    </tr>
+                    {% endfor %}
                 </tbody>
               </table>
       </div>

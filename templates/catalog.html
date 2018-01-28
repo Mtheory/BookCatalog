@@ -18,17 +18,21 @@
             <h5 class="text-right">Login</h5>
         </div>
 
-        <div class="p-5 row">
-            <div class="col-sm-3">
-                <h4>Categories</h4>
-                <div class="list-group">
-                    {% for category in catalog %}
-                    <a href="{{url_for('showItems', category_id = category.id )}}"
-                    class="list-group-item">
-                    {{category.name}}</a>
-                    {% endfor %}
+            <div class="p-5 row">
+                <div class="col-sm-3">
+                    <h4>Categories</h4>
+                    <div class="list-group">
+                        {% for category in catalog %}
+                            {% if categoryItems == null or category.id == categoryItems[0].category_id %}
+                                <a href="{{url_for('showItems', category_id = category.id )}}"
+                                class="list-group-item active">{{category.name}}</a>
+                            {% else %}
+                                <a href="{{url_for('showItems', category_id = category.id )}}"
+                                class="list-group-item">{{category.name}}</a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
 
         <div class="col-sm-9">
             <table class="table table-hover">
@@ -51,5 +55,6 @@
 
 
     </div>
+
 </body>
 </html>

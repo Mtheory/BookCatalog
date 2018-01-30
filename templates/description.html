@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Catalog App</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron">
+        <h1>Book Catalog</h1>
+        <p>Library catalog systems</p>
+        </div>
+
+        <div class="well">
+            <h4 class="text-right">Login</h4>
+        </div>
+
+        <div class="p-5 row">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-10">
+                <div class="jumbotron">
+                    <h4>Category: {{category.name}}</br>
+                        Title: {{item.name}}</br>
+                        Author: {{item.author}}</h4>
+                        <p style="font-size:16px;">{{item.description}}</p>
+                </div>
+            <div class="col-sm-1"></div>
+        </div>
+
+        <ul class="pager">
+            <li class="previous">
+                <a href="{{url_for('showItems', category_id = category.id )}}">Return</a>
+            </li>
+        </ul>
+</body>
+</html>

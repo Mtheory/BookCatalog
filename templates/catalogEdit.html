@@ -46,8 +46,7 @@
                 <tbody>
                     {% for i in categoryItems %}
                     <tr>
-                        <td><a href="{{url_for('showDescription', category_id = i.category_id, book_id=i.id)}}">{{i.name}}</a></td>
-
+                        <td>{{i.name}}</td>
                         <td>{{i.author}}</td>
                     </tr>
                     {% endfor %}

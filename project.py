@@ -16,7 +16,7 @@ session = DBSession()
 
 # Show all categories
 @app.route('/')
-@app.route('/catalog/')
+@app.route('/catalog/', methods=['GET','POST'])
 def showCategories():
     catalog = session.query(Category).order_by(asc(Category.id))
     itemsList = session.query(CategoryItem).filter_by(category_id=1).all()
@@ -24,13 +24,22 @@ def showCategories():
                            catalog=catalog)
 
 
-@app.route('/catalog/<int:category_id>/')
+@app.route('/catalog/<int:category_id>/', methods=['GET','POST'])
 def showItems(category_id):
     catalog = session.query(Category).order_by(asc(Category.id))
-    itemsList = session.query(CategoryItem).filter_by /
-    (category_id=category_id).all()
+    itemsList = session.query(CategoryItem).filter_by(
+                category_id=category_id).all()
     return render_template('catalog.html', categoryItems=itemsList,
                            catalog=catalog)
+
+
+@app.route('/catalog/<int:category_id>/book/<int:book_id>', methods=['GET','POST'])
+def showDescription(category_id, book_id):
+    category = session.query(Category).filter_by(id = category_id).one()
+    item = session.query(CategoryItem).filter_by(id = book_id).one()
+    return render_template('description.html', item=item, category=category)
+
+
 
 if __name__ == '__main__':
     app.debug = True

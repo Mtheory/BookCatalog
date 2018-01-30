@@ -39,14 +39,15 @@
             <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th>Title</th>
+                    <th>Title (click on the book for description)</th>
                     <th>Author</th>
                   </tr>
                 </thead>
                 <tbody>
                     {% for i in categoryItems %}
                     <tr>
-                        <td>{{i.name}}</td>
+                        <td><a href="{{url_for('showDescription', category_id = i.category_id, book_id=i.id)}}">{{i.name}}</a></td>
+
                         <td>{{i.author}}</td>
                     </tr>
                     {% endfor %}

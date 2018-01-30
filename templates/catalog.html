@@ -21,7 +21,10 @@
 
             <div class="p-5 row">
                 <div class="col-sm-3">
-                    <h4>Categories</h4>
+                    <div class="row">
+                        <div class="col-sm-8"><h4>Categories</h4></div>
+                        <div class="col-sm-4"><button type="button" class="btn">Add</button></div>
+                    </div>
                     <div class="list-group">
                         {% for category in catalog %}
                             {% if categoryItems == null or category.id == categoryItems[0].category_id %}
@@ -39,24 +42,30 @@
             <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th>Title</th>
+                    <th>Title (click on the book for description)</th>
                     <th>Author</th>
                   </tr>
                 </thead>
                 <tbody>
                     {% for i in categoryItems %}
                     <tr>
-                        <td><a href="{{url_for('showDescription', category_id = i.category_id, book_id=i.id)}}">{{i.name}}</a></td>
+                        <td><a href="{{url_for('showDescription', category_id = i.category_id, book_id=i.id)}}" data-toggle="tooltip" title="Description">{{i.name}}</a></td>
 
                         <td>{{i.author}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
               </table>
+              <button type="button" class="btn">Add Book</button>
       </div>
 
 
     </div>
 
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
 </body>
 </html>

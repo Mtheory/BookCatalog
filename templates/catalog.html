@@ -19,26 +19,41 @@
             <h4 class="text-right">Login</h4>
         </div>
 
-            <div class="p-5 row">
-                <div class="col-sm-3">
-                    <div class="row">
-                        <div class="col-sm-8"><h4>Categories</h4></div>
-                        <div class="col-sm-4"><button type="button" class="btn">Add</button></div>
-                    </div>
-                    <div class="list-group">
-                        {% for category in catalog %}
-                            {% if categoryItems == null or category.id == categoryItems[0].category_id %}
-                                <a href="{{url_for('showItems', category_id = category.id )}}"
-                                class="list-group-item active">{{category.name}}</a>
-                            {% else %}
-                                <a href="{{url_for('showItems', category_id = category.id )}}"
-                                class="list-group-item">{{category.name}}</a>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                </div>
+        <div class = 'flash'>
+        		      {% with messages = get_flashed_messages() %}
+              {% if messages %}
 
-        <div class="col-sm-9">
+                <ul>
+                {% for message in messages %}
+                    <li> <strong> {{ message }} </strong> </li>
+                {% endfor %}
+                </ul>
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="p-5 row">
+            <div class="col-sm-4">
+                <div class="btn-group btn-group-justified">
+                    <a href="{{url_for('newCategory')}}" class="btn btn-default">ADD</a>
+                    <a href="#" class="btn btn-default">EDIT</a>
+                    <a href="#" class="btn btn-default">DELETE</a>
+                </div>
+            </br>
+            <div class="list-group">
+                {% for category in catalog %}
+                    {% if index == category.id  %}
+                        <a href="{{url_for('showItems', category_id = category.id )}}"
+                        class="list-group-item active"><h5>{{category.name}}</h5></a>
+                    {% else %}
+                        <a href="{{url_for('showItems', category_id = category.id )}}"
+                        class="list-group-item"><h5>{{category.name}}</h5></a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-sm-8">
             <table class="table table-hover">
                 <thead>
                   <tr>
@@ -47,19 +62,23 @@
                   </tr>
                 </thead>
                 <tbody>
-                    {% for i in categoryItems %}
-                    <tr>
-                        <td><a href="{{url_for('showDescription', category_id = i.category_id, book_id=i.id)}}" data-toggle="tooltip" title="Description">{{i.name}}</a></td>
-
-                        <td>{{i.author}}</td>
-                    </tr>
-                    {% endfor %}
+                    {% if categoryItems != null %}
+                        {% for i in categoryItems %}
+                        <tr>
+                            <td><a href="{{url_for('showDescription', category_id = i.category_id, book_id=i.id)}}" data-toggle="tooltip" title="Description">{{i.name}}</a></td>
+                            <td>{{i.author}}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {% endif %}
                 </tbody>
               </table>
-              <button type="button" class="btn">Add Book</button>
+              <a href="#" class="btn btn-default" role="button">Add Book</a>
       </div>
-
-
     </div>
 
 <script>

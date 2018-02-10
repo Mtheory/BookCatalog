@@ -22,7 +22,6 @@
         <div class = 'flash'>
         		      {% with messages = get_flashed_messages() %}
               {% if messages %}
-
                 <ul>
                 {% for message in messages %}
                     <li> <strong> {{ message }} </strong> </li>
@@ -37,7 +36,7 @@
                 <div class="btn-group btn-group-justified">
                     <a href="{{url_for('newCategory')}}" class="btn btn-default">ADD</a>
                     <a href="#" class="btn btn-default">EDIT</a>
-                    <a href="#" class="btn btn-default">DELETE</a>
+                    <a href="#" class="btn btn-default" data-toggle="modal" data-target="#myModal">DELETE</a>
                 </div>
             </br>
             <div class="list-group">
@@ -65,7 +64,7 @@
                     {% if categoryItems != null %}
                         {% for i in categoryItems %}
                         <tr>
-                            <td><a href="{{url_for('showDescription', category_id = i.category_id, book_id=i.id)}}" data-toggle="tooltip" title="Description">{{i.name}}</a></td>
+                            <td><a href="{{url_for('showDescription', category_id = i.category_id, book_id=i.id)}}" data-toggle="tooltip" title="Click for description">{{i.name}}</a></td>
                             <td>{{i.author}}</td>
                         </tr>
                         {% endfor %}
@@ -80,6 +79,32 @@
               <a href="#" class="btn btn-default" role="button">Add Book</a>
       </div>
     </div>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Delete Category</h4>
+          </div>
+          <div class="modal-body">
+            <p>WARNING : Delete will erase category {{catalog[index-1].name}}
+                with all the books stored in it </p>
+          </div>
+          <div class="modal-footer">
+              <form class="form-inline" action="{{url_for('deleteCategory', category_id = index )}}"  method = "post">
+                  <button type="submit" class="btn btn-danger" id="submit" type="submit">Delete</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Return</button>
+              </form>
+          </div>
+      </div>
+
+      </div>
+    </div>
+
 
 <script>
 $(document).ready(function(){

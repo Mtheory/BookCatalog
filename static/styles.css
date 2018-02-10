@@ -2,83 +2,8 @@ body {
 		padding: 3%;
 		padding-top: 0px;
 		height: 100%;
-        background-color: grey;
         font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-        color: white;
 }
-
-.page-container {
-		display: flex;
-        flex-direction: column;
-		width: 100%;
-		height: 100%;
-		padding: 0%;
-        border: 5px solid red;
-}
-
-/*sub section - header*/
-.header {
-		display: flex;
-		flex-wrap: nowrap;
-		justify-content: space-between;
-		align-items: center;
-		width: auto;
-		height: auto;
-		padding: 10px;
-		margin-bottom: 2%;
-        border: 5px solid black;
-}
-
-.name-box {
-		width: auto;
-		height: auto;
-        border: 5px solid yellow;
-}
-
-
-
-.invisible-header-box {
-		width: auto;
-		height: auto;
-        border: 5px solid yellow;
-}
-
-.login-box {
-		display: flex;
-		flex-direction: column;
-		width: auto;
-		height: auto;
-        border: 5px solid yellow;
-}
-
-
-
-
-/*subsection - middle picture*/
-.middle-section {
-		display: flex;
-		width: auto;
-        height: auto;
-		margin: 0px;
-		padding: 0px;
-}
-.middle-section ul,li {
-        align-self:flex-start;
-        list-style-type: none;
-        background-color: white;
-        color: black;
-}
-
-
-
-/* sub section - container holiding bottom half of the page*/
-.section-description-text {
-		font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-		font-style: normal;
-		width: auto;
-		font-size: 1.3vw;
-		text-align: left;
-		padding-bottom: 0px;
-		margin-bottom: 0px;
-		line-height: 0vw;
+.previous h4 {
+    color:black;
 }

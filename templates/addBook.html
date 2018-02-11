@@ -1,15 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Catalog App</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
-<body>
-    <div class="container">
+{% extends "main.html" %}
+{% block content %}
         <div class="jumbotron">
         <h1>Book Catalog</h1>
         <p>Library catalog systems</p>
@@ -43,8 +33,7 @@
 
             <ul class="pager">
                 <li class="previous">
-                    <a href="{{url_for('showItems', category_id = category.id )}}">Return</a>
+                    <a href="{{url_for('showItems', category_id = category.id )}}"><h5>Return</h5></a>
                 </li>
             </ul>
-</body>
-</html>
+{% endblock %}

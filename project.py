@@ -32,9 +32,8 @@ def showItems(category_id):
     catalog = session.query(Category).order_by(asc(Category.id))
     itemsList = session.query(CategoryItem).filter_by(
                 category_id=category_id).all()
-    index = category_id
     return render_template('catalog.html', categoryItems=itemsList,
-                           catalog=catalog, index = index)
+                           catalog=catalog, index = category_id)
 
 
 # Show book description
@@ -60,15 +59,15 @@ def newCategory():
 
 # Edit a selected category
 @app.route('/catalog/<int:category_id>/edit/', methods = ['GET', 'POST'])
-def editRestaurant(category_id):
-  editedCategory = session.query(Category).filter_by(id = category_id).one()
-  if request.method == 'POST':
-      if request.form['name']:
-        editedCategory.name = request.form['name']
-        flash('Category Successfully Edited %s' % editedCategory.name)
+def editCategory(category_id):
+    editedCategory = session.query(Category).filter_by(id = category_id).one()
+    if request.method == 'POST':
+        if request.form['name']:
+            editedCategory.name = request.form['name']
+            flash('Category Successfully Edited %s' % editedCategory.name)
         return redirect(url_for('showItems', category_id = category_id))
-  else:
-    return render_template('editCategory.html')
+    else:
+        return render_template('editCategory.html', category_id = category_id, category_name = editedCategory.name )
 
 
 # Delete category

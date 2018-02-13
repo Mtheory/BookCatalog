@@ -9,35 +9,36 @@
             {% set _ = active_category_name.append(category.name)%}
         {% endif %}
 {% endfor %}
+    <div class="jumbotron">
+        <h1>Book Catalog</h1>
+        <p>Library catalog systems</p>
+    </div>
 
-        <div class="jumbotron">
-            <h1>Book Catalog</h1>
-            <p>Library catalog systems</p>
-        </div>
+    <div class="well">
+        <h2 class="text-left">
+            Category : {{active_category_name[0]}}
+        </h2>
+    </div>
 
-        <div class="well">
-            <h2 class="text-left">Category : {{active_category_name[0]}}</h2>
-        </div>
+    <div class = 'flash'>
+    	{% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info">
+                        <strong> {{ message }}</strong>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
 
-        <div class = 'flash'>
-        	{% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-info">
-                            <strong> {{ message }}</strong>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-        </div>
-
-        <div class="p-5 row">
-            <div class="col-sm-4">
-                <div class="btn-group btn-group-justified">
-                    <a href="{{url_for('newCategory')}}" class="btn btn-default">ADD</a>
-                    <a href="{{url_for('editCategory', category_id = active_category_id[0])}}" class="btn btn-default">EDIT</a>
-                    <a href="#" class="btn btn-default" data-toggle="modal" data-target="#myModal">DELETE</a>
-                </div>
+    <div class="p-5 row">
+        <div class="col-sm-4">
+            <div class="btn-group btn-group-justified">
+                <a href="{{url_for('newCategory')}}" class="btn btn-default">ADD</a>
+                <a href="{{url_for('editCategory', category_id = active_category_id[0])}}" class="btn btn-default">EDIT</a>
+                <a href="#" class="btn btn-default" data-toggle="modal" data-target="#myModal">DELETE</a>
+            </div>
             </br>
             <div class="list-group">
                 {% for category in catalog %}
@@ -53,32 +54,29 @@
         </div>
 
         <div class="col-sm-8">
-            <h4> Test </h4>
             <table class="table table-hover">
                 <thead>
-                  <tr>
-                    <th>Title (click on the book for description)</th>
-                    <th>Author</th>
-                  </tr>
+                    <tr>
+                        <th>Title (click on the book for description)</th>
+                        <th>Author</th>
+                    </tr>
                 </thead>
                 <tbody>
                     {% if categoryItems != null %}
                         {% for i in categoryItems %}
-                        <tr>
-                            <td><a href="{{url_for('showDescription', category_id = i.category_id, book_id=i.id)}}" data-toggle="tooltip" title="Click for description">{{i.name}}</a></td>
-                            <td>{{i.author}}</td>
-                        </tr>
+                            <tr>
+                                <td>
+                                    <a href="{{url_for('showDescription', category_id = i.category_id, book_id=i.id)}}" data-toggle="tooltip" title="Click for description">
+                                    {{i.name}}</a>
+                                </td>
+                                <td>{{i.author}}</td>
+                            </tr>
                         {% endfor %}
-                    {% else %}
-                        <tr>
-                            <td></td>
-                            <td></td>
-                        </tr>
                     {% endif %}
                 </tbody>
-              </table>
-              <a href="#" class="btn btn-default" role="button">Add Book</a>
-      </div>
+            </table>
+            <a href="{{url_for('addBook', category_id = active_category_id[0])}}" class="btn btn-default" role="button">Add Book</a>
+        </div>
     </div>
 
     <!-- Modal -->
@@ -91,7 +89,7 @@
                         <h4 class="modal-title">Delete Category</h4>
                 </div>
                 <div class="modal-body">
-                    <p>WARNING : Delete will erase category {{active_category_name[0]}}
+                    <p>WARNING : Delete will erase category <strong>{{active_category_name[0]}}</strong>
                     with all the books stored in it </p>
                 </div>
                 <div class="modal-footer">

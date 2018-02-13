@@ -1,31 +1,54 @@
 {% extends "main.html" %}
 {% block content %}
-        <div class="jumbotron">
+    <div class="jumbotron">
         <h1>Book Catalog</h1>
         <p>Library catalog systems</p>
-        </div>
+    </div>
 
-        <div class="well">
-            <h4 class="text-right">Login</h4>
-        </div>
+    <div class="well">
+        <h4 class="text-right">Login</h4>
+    </div>
 
-        <div class="p-5 row">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-10">
-                <div class="jumbotron">
-                    <h4 class="text-center">Category: {{category.name}}</br></h4>
-                        <h4>Title: {{item.name}}</br>
-                        Author: {{item.author}}</h4>
-                        <p style="font-size:16px;">{{item.description}}</p>
-                        </br></br>
-                        <a href="#" role="button" class="btn btn-default">Edit</a>
-                        <a href="#" role="button" class="btn btn-default">Delete</a>
+    <div class="p-5 row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-10">
+            <div class="jumbotron">
+                <h4 class="text-center">Category: {{category.name}}</br></h4>
+                    <h4>Title: {{book.name}}</br>
+                    Author: {{book.author}}</h4>
+                    <p style="font-size:16px;">{{book.description}}</p>
+                    </br></br>
+                    <a href="{{url_for('editBook', category_id = category.id, book_id = book.id)}}" role="button" class="btn btn-default">Edit</a>
+                    <a href="#" class="btn btn-default" data-toggle="modal" data-target="#myModal">Delete</a>
+            </div>
+            <ul class="pager">
+                <li class="previous">
+                    <a href="{{url_for('showItems', category_id = category.id )}}"><h4>Return</h4></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Delete Category</h4>
                 </div>
-                <ul class="pager">
-                    <li class="previous">
-                        <a href="{{url_for('showItems', category_id = category.id )}}"><h4>Return</h4></a>
-                    </li>
-                </ul>
+                <div class="modal-body">
+                    <p>WARNING : Delete will erase <strong>{{book.name}}</strong> book </p>
+                </div>
+                <div class="modal-footer">
+                    <form class="form-inline" action="{{url_for('deleteBook', category_id = category.id, book_id = book.id)}}"  method = "post">
+                    <button type="submit" class="btn btn-danger" id="submit" type="submit">Delete</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Return</button>
+                    </form>
+                </div>
             </div>
         </div>
+    </div>
+
 {% endblock %}

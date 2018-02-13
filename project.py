@@ -26,7 +26,7 @@ def showCategories():
                            catalog=catalog, index = index)
 
 
-# show selected category and associated items
+# Show selected category and associated books
 @app.route('/catalog/<int:category_id>/', methods=['GET','POST'])
 def showItems(category_id):
     catalog = session.query(Category).order_by(asc(Category.id))
@@ -36,12 +36,12 @@ def showItems(category_id):
                            catalog=catalog, index = category_id)
 
 
-# Show book description
+# Show book description and details
 @app.route('/catalog/<int:category_id>/book/<int:book_id>', methods=['GET','POST'])
 def showDescription(category_id, book_id):
     category = session.query(Category).filter_by(id = category_id).one()
     item = session.query(CategoryItem).filter_by(id = book_id).one()
-    return render_template('description.html', item=item, category=category)
+    return render_template('description.html', book=item, category=category)
 
 
 # Create a new category
@@ -83,12 +83,47 @@ def deleteCategory(category_id):
 
 
 # Add a new book
+@app.route('/catalog/<int:category_id>/addbook/', methods=['GET','POST'])
+def addBook(category_id):
+    selectedCategory = session.query(Category).filter_by(id = category_id).one()
+    if request.method == 'POST':
+        newBook = CategoryItem(name = request.form['name'], author = request.form['author'], description = request.form['description'], category_id = category_id)
+        session.add(newBook)
+        session.commit()
+        flash('New Book %s Successfully Created' % newBook.name)
+        return redirect(url_for('showItems', category_id = category_id))
+    else:
+        return render_template('addBook.html', category_id = category_id, category_name = selectedCategory.name)
 
 
 # Edit a book
+@app.route('/catalog/<int:category_id>/book/<int:book_id>/edit', methods=['GET','POST'])
+def editBook(category_id, book_id):
+    selectedCategory = session.query(Category).filter_by(id = category_id).one()
+    book = session.query(CategoryItem).filter_by(id = book_id).one()
+    if request.method == 'POST':
+        if request.form['name']:
+            book.name = request.form['name']
+        if request.form['author']:
+            book.author = request.form['author']
+        if request.form['description']:
+            book.description = request.form['description']
+        flash('Book %s Successfully Edited' % book.name)
+        return render_template('description.html', book = book, category = selectedCategory)
+    else:
+        return render_template('editBook.html', book = book, category = selectedCategory )
 
 
 # Delete a book
+@app.route('/catalog/<int:category_id>/book/<int:book_id>/delete', methods=['GET','POST'])
+def deleteBook(category_id, book_id):
+    selectedCategory = session.query(Category).filter_by(id = category_id).one()
+    bookToDelete = session.query(CategoryItem).filter_by(id = book_id).one()
+    if request.method == 'POST':
+        session.delete(bookToDelete)
+        flash('Book %s Successfully Deleted' % bookToDelete.name)
+        session.commit()
+    return redirect(url_for('showItems', category_id = category_id))
 
 
 if __name__ == '__main__':

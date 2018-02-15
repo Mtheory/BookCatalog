@@ -13,11 +13,11 @@
         <div class="col-sm-1"></div>
         <div class="col-sm-10">
             <div class="jumbotron">
-                <h4 class="text-center">Category: {{category.name}}</br></h4>
-                    <h4>Title: {{book.name}}</br>
+                <h4 class="text-center">Category: {{category.name}}<br/></h4>
+                    <h4>Title: {{book.name}}<br/>
                     Author: {{book.author}}</h4>
                     <p style="font-size:16px;">{{book.description}}</p>
-                    </br></br>
+                    <br/><br/>
                     <a href="{{url_for('editBook', category_id = category.id, book_id = book.id)}}" role="button" class="btn btn-default">Edit</a>
                     <a href="#" class="btn btn-default" data-toggle="modal" data-target="#myModal">Delete</a>
             </div>
@@ -43,7 +43,7 @@
                 </div>
                 <div class="modal-footer">
                     <form class="form-inline" action="{{url_for('deleteBook', category_id = category.id, book_id = book.id)}}"  method = "post">
-                    <button type="submit" class="btn btn-danger" id="submit" type="submit">Delete</button>
+                    <button type="submit" class="btn btn-danger" id="submit">Delete</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Return</button>
                     </form>
                 </div>

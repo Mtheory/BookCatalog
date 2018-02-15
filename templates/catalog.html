@@ -39,7 +39,7 @@
                 <a href="{{url_for('editCategory', category_id = active_category_id[0])}}" class="btn btn-default">EDIT</a>
                 <a href="#" class="btn btn-default" data-toggle="modal" data-target="#myModal">DELETE</a>
             </div>
-            </br>
+            <br/>
             <div class="list-group">
                 {% for category in catalog %}
                     {% if index == category.id  %}
@@ -94,7 +94,7 @@
                 </div>
                 <div class="modal-footer">
                     <form class="form-inline" action="{{url_for('deleteCategory', category_id = index )}}"  method = "post">
-                    <button type="submit" class="btn btn-danger" id="submit" type="submit">Delete</button>
+                    <button type="submit" class="btn btn-danger" id="submit">Delete</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Return</button>
                     </form>
                 </div>

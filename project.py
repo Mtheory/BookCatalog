@@ -130,6 +130,29 @@ def gconnect():
     print "done!"
     return output
 
+
+# #Edit a restaurant
+# @app.route('/restaurant/<int:restaurant_id>/edit/', methods = ['GET', 'POST'])
+# def editRestaurant(restaurant_id):
+#   #verify that a user is logged in by checking to see if the login session
+#   #has the username variable filled in
+#   if 'username' not in login_session:
+#      return redirect('/login')
+#   if restaurantToDelete.user_id != login_session['user_id']:
+#       return "<script>function myFunction() " +
+#              "{ alert('You are not authorized to edit this restaurant. " +
+#              "You can only edit the restaurant that you have created');" +
+#              "}</script><body onload='myFunction()''>"
+#   editedRestaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
+#   if request.method == 'POST':
+#       if request.form['name']:
+#         editedRestaurant.name = request.form['name']
+#         flash('Restaurant Successfully Edited %s' % editedRestaurant.name)
+#         return redirect(url_for('showRestaurants'))
+#   else:
+#     return render_template('editRestaurant.html', restaurant = editedRestaurant)
+
+
 # disconnect the user from Google account
 @app.route('/gdisconnect')
 def gdisconnect():
@@ -191,8 +214,12 @@ def showCategories():
     catalog = session.query(Category).order_by(asc(Category.id))
     itemsList = session.query(CategoryItem).filter_by(category_id=1).all()
     index = 1
-    return render_template('catalog.html', categoryItems=itemsList,
-                           catalog=catalog, index=index)
+    if 'username' not in login_session:
+        return render_template('catalogPublic.html', categoryItems=itemsList,
+                                catalog=catalog, index=index) ## change to public
+    else:
+        return render_template('catalog.html', categoryItems=itemsList,
+                                catalog=catalog, index=index)
 
 
 # Show selected category and associated books
@@ -201,8 +228,12 @@ def showItems(category_id):
     catalog = session.query(Category).order_by(asc(Category.id))
     itemsList = session.query(CategoryItem).filter_by(
                 category_id=category_id).all()
-    return render_template('catalog.html', categoryItems=itemsList,
-                           catalog=catalog, index=category_id)
+    if 'username' not in login_session:
+        return render_template('catalogPublic.html', categoryItems=itemsList,
+                                catalog=catalog, index=category_id) ## change to public
+    else:
+        return render_template('catalog.html', categoryItems=itemsList,
+                                catalog=catalog, index=category_id)
 
 
 # Show book description and details
@@ -211,7 +242,10 @@ def showItems(category_id):
 def showDescription(category_id, book_id):
     category = session.query(Category).filter_by(id=category_id).one()
     item = session.query(CategoryItem).filter_by(id=book_id).one()
-    return render_template('description.html', book=item, category=category)
+    if 'username' not in login_session:
+        return render_template('descriptionPublic.html', book=item, category=category) ## change to public
+    else:
+        return render_template('description.html', book=item, category=category)
 
 
 # Create a new category

@@ -9,17 +9,25 @@
             {% set _ = active_category_name.append(category.name)%}
         {% endif %}
 {% endfor %}
+
     <div class="jumbotron">
-        <h1>Book Catalog</h1>
-        <p>Library catalog systems</p>
-        <a href="{{url_for('showLogin')}}"><h4 class="text-right">Login</h4></a>
-        <a href="{{url_for('gdisconnect')}}"><h4 class="text-right">Disconnect</h4></a>
+        <div class="col-sm-12"><h1>Book Catalog</h1><p>Library catalog systems</p></div>
+        {%if 'username' not in session %}
+        <a href="{{url_for('showLogin')}}">
+            <h4 class="log text-right">Login</h4></a>
+        {% else %}
+        <a href="{{url_for('gdisconnect')}}">
+            <h4 class="text-right">Disconnect</h4></a>
+        {% endif %}
     </div>
 
     <div class="well">
-        <h2 class="text-left">
+        <h3 class="text-left">
             Category : {{active_category_name[0]}}
-        </h2>
+        </h3>
+        {%if 'username' in session %}
+        <p style="color:green;" class="user-name text-right">{{session['username']}} is Logged</p>
+        {% endif %}
     </div>
 
     <div class = 'flash'>

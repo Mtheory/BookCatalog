@@ -1,9 +1,17 @@
 body {
-		padding: 3%;
-		padding-top: 0px;
-		height: 100%;
-        font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    padding: 3%;
+    padding-top: 0px;
+    height: 100%;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 }
 .previous h4 {
     color:black;
+}
+.user-name {
+    padding-bottom: 0px;
+    margin: 0px;
+    color: green;
+}
+.log {
+    color: black;
 }

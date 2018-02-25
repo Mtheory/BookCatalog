@@ -1,51 +1,88 @@
 {% extends "main.html" %}
 {% block content %}
-        <div class="jumbotron">
-            <h1>Book Catalog</h1>
-            <p>Library catalog systems</p>
-        </div>
 
-        <div class="well">
-            <h4 class="text-right">Login</h4>
-        </div>
+{% set active_category_id = [] %}
+{% set active_category_name =[] %}
+    {% for category in catalog %}
+        {% if index == category.id  %}
+            {% set _ = active_category_id.append(category.id)%}
+            {% set _ = active_category_name.append(category.name)%}
+        {% endif %}
+{% endfor %}
 
-            <div class="p-5 row">
-                <div class="col-sm-3">
-                    <h4>Categories</h4>
-                    <div class="list-group">
-                        {% for category in catalog %}
-                            {% if categoryItems == null or category.id == categoryItems[0].category_id %}
-                                <a href="{{url_for('showItems', category_id = category.id )}}"
-                                class="list-group-item active">{{category.name}}</a>
-                            {% else %}
-                                <a href="{{url_for('showItems', category_id = category.id )}}"
-                                class="list-group-item">{{category.name}}</a>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                </div>
-
-        <div class="col-sm-9">
-            <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th>Title (click on the book for description)</th>
-                    <th>Author</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    {% for i in categoryItems %}
-                    <tr>
-                        <td><a href="{{url_for('showDescription', category_id = i.category_id, book_id=i.id)}}">{{i.name}}</a></td>
-
-                        <td>{{i.author}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-              </table>
-      </div>
-
-
+    <div class="jumbotron">
+        <div class="col-sm-12"><h1>Book Catalog</h1><p>Library catalog systems</p></div>
+        {%if 'username' not in session %}
+        <a href="{{url_for('showLogin')}}">
+            <h4 class="log text-right">Login</h4></a>
+        {% else %}
+        <a href="{{url_for('gdisconnect')}}">
+            <h4 class="text-right">Disconnect</h4></a>
+        {% endif %}
     </div>
 
+    <div class="well">
+        <h3 class="text-left">
+            Category : {{active_category_name[0]}}
+        </h3>
+    </div>
+
+    <div class = 'flash'>
+    	{% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info">
+                        <strong> {{ message }}</strong>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="p-5 row">
+
+        <div class="col-sm-4">
+            <div class="list-group">
+                {% for category in catalog %}
+                    {% if index == category.id  %}
+                        <a href="{{url_for('showItems', category_id = category.id )}}"
+                        class="list-group-item active"><h5>{{category.name}}</h5></a>
+                    {% else %}
+                        <a href="{{url_for('showItems', category_id = category.id )}}"
+                        class="list-group-item"><h5>{{category.name}}</h5></a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-sm-8">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Title (click on the book for description)</th>
+                        <th>Author</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if categoryItems != null %}
+                        {% for i in categoryItems %}
+                            <tr>
+                                <td>
+                                    <a href="{{url_for('showDescription', category_id = i.category_id, book_id=i.id)}}" data-toggle="tooltip" title="Click for description">
+                                    {{i.name}}</a>
+                                </td>
+                                <td>{{i.author}}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
 {% endblock %}

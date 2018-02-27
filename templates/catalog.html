@@ -11,13 +11,16 @@
 {% endfor %}
 
     <div class="jumbotron">
-        <div class="col-sm-12"><h1>Book Catalog</h1><p>Library catalog systems</p></div>
+        <div class="col-sm-12">
+            <h1>Book Catalog</h1>
+            <p>Library catalog systems</p>
+        </div>
         {%if 'username' not in session %}
-        <a href="{{url_for('showLogin')}}">
-            <h4 class="log text-right">Login</h4></a>
+            <a href="{{url_for('showLogin')}}">
+                <h4 class="log text-right">Login</h4></a>
         {% else %}
-        <a href="{{url_for('gdisconnect')}}">
-            <h4 class="text-right">Disconnect</h4></a>
+            <a href="{{url_for('gdisconnect')}}">
+                <h4 class="text-right">Disconnect</h4></a>
         {% endif %}
     </div>
 
@@ -26,7 +29,9 @@
             Category : {{active_category_name[0]}}
         </h3>
         {%if 'username' in session %}
-        <p style="color:green;" class="user-name text-right">{{session['username']}} is Logged</p>
+        <p style="color:green;" class="user-name text-right">
+            Logged as {{session['username']}}
+        </p>
         {% endif %}
     </div>
 

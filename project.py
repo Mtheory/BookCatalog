@@ -15,11 +15,11 @@ import json
 
 
 app = Flask(__name__)
-app.secret_key = 'some_secret'###################################################
-
+app.secret_key = '123Gvt45Ctd67MlerT56TG9'
 
 # clientID will reference client_secrets.json file
-CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
+CLIENT_ID = json.loads(open('client_secrets.json', 'r').
+                       read())['web']['client_id']
 APPLICATION_NAME = "Book Catalog Application"
 
 
@@ -30,7 +30,7 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
-## routnig for login and create an anti forgery token: state variable.
+# routnig for login and create an anti forgery token: state variable.
 @app.route('/login')
 def showLogin():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
@@ -42,9 +42,8 @@ def showLogin():
 # google login
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
-    print "gconect function" #######################################################
-    # confirm that the token that the client sends to the server matches the token
-    # that the server sent to the client.
+    # confirm that the token that the client sends to the server matches
+    # the token that the server sent to the client.
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
@@ -55,8 +54,8 @@ def gconnect():
         oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
-    # If an error happens along the way, then i will throw this flow exchange FlowExchangeError
-    # and send the response as JSON object.
+    # If an error happens along the way, then i will throw this flow exchange
+    # FlowExchangeError and send the response as JSON object.
     except FlowExchangeError:
         response = make_response(
             json.dumps('Failed to upgrade the authorization code.'), 401)
@@ -71,15 +70,18 @@ def gconnect():
     h = httplib2.Http()
     result = json.loads(h.request(url, 'GET')[1])
 
-    # if my result contains any errors, then send the 500 Internal Server Error to the client.
+    # if my result contains any errors, then send the 500 Internal
+    # Server Error to the client.
     if result.get('error') is not None:
         response = make_response(json.dumps(result.get('error')), 500)
         response.headers['Content-Type'] = 'application/json'
         return response
 
     # check if we have the right access token.
-    gplus_id = credentials.id_token['sub'] # grab the ID of the token in my credentials object
-    # compare it to the ID returned by the Google API server. If these two ID's do not match the i do not have the correct token
+    gplus_id = credentials.id_token['sub']
+    # grab the ID of the token in my credentials object
+    # compare it to the ID returned by the Google API server. If these two
+    # ID's do not match the i do not have the correct token
     # and should return an error.
     if result['user_id'] != gplus_id:
         response = make_response(
@@ -95,13 +97,14 @@ def gconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-    # check to see if user is alread logged in. This will return a 200 Successful
-    # authentication without resetting all of the login session variables again.
+    # check to see if user is alread logged in. This will return a 200
+    # Successful authentication without resetting all of the login
+    # session variables again.
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
-                                 200)
+        response = make_response(json.dumps(
+            'Current user is already connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -109,7 +112,7 @@ def gconnect():
     login_session['access_token'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
 
-    #using Google Plus API get some more information aout user
+    # using Google Plus API get some more information aout user
     userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
     params = {'access_token': credentials.access_token, 'alt': 'json'}
     answer = requests.get(userinfo_url, params=params)
@@ -124,33 +127,11 @@ def gconnect():
     output += '<h1>Welcome, '
     output += login_session['username']
     output += '!</h1>'
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    # flas message to let the user know that they are logged in.
-    flash("you are now logged in as %s" % login_session['username'])
+
+    # flash message to let the user know that they are logged in.
+    flash("You are now logged as %s" % login_session['username'])
     print "done!"
     return output
-
-
-# #Edit a restaurant
-# @app.route('/restaurant/<int:restaurant_id>/edit/', methods = ['GET', 'POST'])
-# def editRestaurant(restaurant_id):
-#   #verify that a user is logged in by checking to see if the login session
-#   #has the username variable filled in
-#   if 'username' not in login_session:
-#      return redirect('/login')
-#   if restaurantToDelete.user_id != login_session['user_id']:
-#       return "<script>function myFunction() " +
-#              "{ alert('You are not authorized to edit this restaurant. " +
-#              "You can only edit the restaurant that you have created');" +
-#              "}</script><body onload='myFunction()''>"
-#   editedRestaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
-#   if request.method == 'POST':
-#       if request.form['name']:
-#         editedRestaurant.name = request.form['name']
-#         flash('Restaurant Successfully Edited %s' % editedRestaurant.name)
-#         return redirect(url_for('showRestaurants'))
-#   else:
-#     return render_template('editRestaurant.html', restaurant = editedRestaurant)
 
 
 # disconnect the user from Google account
@@ -158,36 +139,40 @@ def gconnect():
 def gdisconnect():
     # Only disconnect a conneected user
     access_token = login_session.get('access_token')
-    #if the acccess_token is empty we don't have record of a user, so there is no diconnect from the application
+    # if the acccess_token is empty we don't have record of a user, so there
+    # is no diconnect from the application
     if access_token is None:
-        print 'Access Token is None'#return a 401 error for this case
-        response = make_response(json.dumps('Current user not connected.'), 401)
+        print 'Access Token is None'  # return a 401 error for this case
+        response = make_response(json.dumps('Current user not connected.'),
+                                 401)
         response.headers['Content-Type'] = 'application/json'
         return response
     print 'In gdisconnect access token is %s', access_token
     print 'User name is: '
     print login_session['username']
     # acces token and pass it into google's url for revoking
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' \
+          % login_session['access_token']
     h = httplib2.Http()
     # now store Google's response in an object called result
     result = h.request(url, 'GET')[0]
-    print 'result is '
-    print result
-    # if response of 200 was received then i succesfully diconected fro the users
+
+    # if response of 200 was received then succesfully diconected
     if result['status'] == '200':
         # delete teh credentials .gplus_id ...etc
         del login_session['access_token']
         del login_session['gplus_id']
         del login_session['username']
-        # create a response to indicate that a user successfully logged out of my app
+        # create a response to indicate that a user successfully logged out
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
-        return response
+        flash("Successfully disconnected")
+        return showCategories()
     else:
-        #if getting other response than 200 , the somthing went worng
+        # if getting other response than 200 , the somthing went worng
         # and return a 00 message to the client with sttment of what happened
-        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response = make_response(json.dumps(
+                    'Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -216,10 +201,10 @@ def showCategories():
     index = 1
     if 'username' not in login_session:
         return render_template('catalogPublic.html', categoryItems=itemsList,
-                                catalog=catalog, index=index) ## change to public
+                               catalog=catalog, index=index)
     else:
         return render_template('catalog.html', categoryItems=itemsList,
-                                catalog=catalog, index=index)
+                               catalog=catalog, index=index)
 
 
 # Show selected category and associated books
@@ -230,10 +215,10 @@ def showItems(category_id):
                 category_id=category_id).all()
     if 'username' not in login_session:
         return render_template('catalogPublic.html', categoryItems=itemsList,
-                                catalog=catalog, index=category_id) ## change to public
+                               catalog=catalog, index=category_id)
     else:
         return render_template('catalog.html', categoryItems=itemsList,
-                                catalog=catalog, index=category_id)
+                               catalog=catalog, index=category_id)
 
 
 # Show book description and details
@@ -243,9 +228,11 @@ def showDescription(category_id, book_id):
     category = session.query(Category).filter_by(id=category_id).one()
     item = session.query(CategoryItem).filter_by(id=book_id).one()
     if 'username' not in login_session:
-        return render_template('descriptionPublic.html', book=item, category=category) ## change to public
+        return render_template('descriptionPublic.html',
+                               book=item, category=category)
     else:
-        return render_template('description.html', book=item, category=category)
+        return render_template('description.html',
+                               book=item, category=category)
 
 
 # Create a new category

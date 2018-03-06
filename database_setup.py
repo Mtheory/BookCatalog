@@ -11,6 +11,8 @@ class Category(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
+    # Foreign key relationships
+    books = relationship("CategoryItem", backref="category", passive_deletes=True)
 
     @property
     def serialize(self):
@@ -28,8 +30,7 @@ class CategoryItem(Base):
     author = Column(String(200), nullable=False)
     description = Column(String(350))
     id = Column(Integer, primary_key=True)
-    category_id = Column(Integer, ForeignKey('category.id'))
-    category = relationship(Category)
+    category_id = Column(Integer, ForeignKey('category.id', ondelete='CASCADE'))
 
     @property
     def serialize(self):

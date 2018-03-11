@@ -1,8 +1,13 @@
-from flask import Flask, render_template, request, redirect, \
-                  jsonify, url_for, flash
+from flask import (Flask,
+                   render_template,
+                   request,
+                   redirect,
+                   jsonify,
+                   url_for,
+                   flash)
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Category, CategoryItem
+from database_setup import Base, Category, CategoryItem, User
 from flask import session as login_session
 import random
 import string
@@ -119,9 +124,15 @@ def gconnect():
 
     data = answer.json()
 
-    # store the user datathat we are interested
+    # store the user datat hat we are interested
     login_session['username'] = data['name']
     login_session['email'] = data['email']
+
+    # check if user exists, if it doesn't make a new None
+    user_id = getUserID(login_session['email'])
+    if not user_id:
+        user_id = createUser(login_session)
+    login_session['user_id'] = user_id
 
     output = ''
     output += '<h1>Welcome, '
@@ -176,12 +187,41 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
+# creates a new user in our database extracting all of the fields necessary
+# from login_session to populate all the values required. In Next
+# step returns the user ID of new user created.
+def createUser(login_session):
+    newUser = User(name=login_session['username'], email=login_session[
+                   'email'])
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email=login_session['email']).one()
+    return user.id
+
+# returns the user object associated with user_id given as an argument
+def getUserInfo(user_id):
+    user = session.query(User).filter_by(id=user_id).one()
+    return user
+
+# returns user ID  if email in the argument is recorded in User tabl
+# if not then returns none.
+def getUserID(email):
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except:
+        return None
 
 # JSON APIs to view Catalog/Category Information
 @app.route('/catalog/JSON')
 def categoriesJSON():
     catalog = session.query(Category).order_by(asc(Category.id))
     return jsonify(Catalog=[c.serialize for c in catalog])
+
+@app.route('/catalog/usersJSON')
+def usersJSON():
+    users = session.query(User).order_by(asc(User.id))
+    return jsonify(User=[c.serialize for c in users])
 
 
 @app.route('/catalog/<int:category_id>/JSON')
@@ -190,7 +230,6 @@ def categoryBooksJSON(category_id):
     itemsList = session.query(CategoryItem).filter_by(
                 category_id=category_id).all()
     return jsonify(CategoryItem=[i.serialize for i in itemsList])
-
 
 # Show all categories
 @app.route('/')
@@ -238,8 +277,12 @@ def showDescription(category_id, book_id):
 # Create a new category
 @app.route('/catalog/new/', methods=['GET', 'POST'])
 def newCategory():
+    if 'username' not in login_session:
+        return redirect('/login')
+
     if request.method == 'POST':
-        newCategory = Category(name=request.form['name'])
+        newCategory = Category(name=request.form['name'],
+                               user_id=login_session['user_id'])
         session.add(newCategory)
         flash('New Category %s Successfully Created' % newCategory.name)
         session.commit()
@@ -251,7 +294,16 @@ def newCategory():
 # Edit a selected category
 @app.route('/catalog/<int:category_id>/edit/', methods=['GET', 'POST'])
 def editCategory(category_id):
+    if 'username' not in login_session:
+        return redirect('/login')
+
     editedCategory = session.query(Category).filter_by(id=category_id).one()
+    if editedCategory.user_id != login_session['user_id']:
+        return ("<script>function myFunction() "
+                "{ alert('You are not authorized to edit this category. "
+                "You can only edit the category that you have created');"
+                "setTimeout(function() {history.go(-1);}, 100);}"
+                "</script><body onload='myFunction()''>")
     if request.method == 'POST':
         if request.form['name']:
             editedCategory.name = request.form['name']
@@ -265,7 +317,16 @@ def editCategory(category_id):
 # Delete category
 @app.route('/catalog/<int:category_id>/delete/', methods=['GET', 'POST'])
 def deleteCategory(category_id):
+    if 'username' not in login_session:
+        return redirect('/login')
+
     selectedCategory = session.query(Category).filter_by(id=category_id).one()
+    if selectedCategory.user_id != login_session['user_id']:
+        return ("<script>function myFunction() "
+                "{ alert('You are not authorized to delete this category. "
+                "You can only delete the category that you have created');"
+                "setTimeout(function() {history.go(-1);}, 100);}"
+                "</script><body onload='myFunction()''>")
     if request.method == 'POST':
         session.delete(selectedCategory)
         flash('%s Successfully Deleted' % selectedCategory.name)
@@ -276,12 +337,23 @@ def deleteCategory(category_id):
 # Add a new book
 @app.route('/catalog/<int:category_id>/addbook/', methods=['GET', 'POST'])
 def addBook(category_id):
+    if 'username' not in login_session:
+        return redirect('/login')
+
     selectedCategory = session.query(Category).filter_by(id=category_id).one()
+    if selectedCategory.user_id != login_session['user_id']:
+        return ("<script>function myFunction() " +
+               "{ alert('You are not authorized to add a book to this category."
+               "You can only add the book with category "
+               "that you have created');"
+               "setTimeout(function() {history.go(-1);}, 100);}"
+               "</script><body onload='myFunction()''>")
     if request.method == 'POST':
         newBook = CategoryItem(name=request.form['name'],
                                author=request.form['author'],
                                description=request.form['description'],
-                               category_id=category_id)
+                               category_id=category_id,
+                               user_id=login_session['user_id'])
         session.add(newBook)
         session.commit()
         flash('New Book %s Successfully Created' % newBook.name)
@@ -295,8 +367,17 @@ def addBook(category_id):
 @app.route('/catalog/<int:category_id>/book/<int:book_id>/edit',
            methods=['GET', 'POST'])
 def editBook(category_id, book_id):
+    if 'username' not in login_session:
+        return redirect('/login')
+
     selectedCategory = session.query(Category).filter_by(id=category_id).one()
     book = session.query(CategoryItem).filter_by(id=book_id).one()
+    if book.user_id != login_session['user_id']:
+        return ("<script>function myFunction(){alert('You are not authorized "
+                "to edit this book. You can only edit the book within category"
+                " that you have created');setTimeout(function() "
+                "{history.go(-1);}, 100);}"
+                "</script><body onload='myFunction()''>")
     if request.method == 'POST':
         if request.form['name']:
             book.name = request.form['name']
@@ -316,8 +397,18 @@ def editBook(category_id, book_id):
 @app.route('/catalog/<int:category_id>/book/<int:book_id>/delete',
            methods=['GET', 'POST'])
 def deleteBook(category_id, book_id):
+    if 'username' not in login_session:
+        return redirect('/login')
+
     selectedCategory = session.query(Category).filter_by(id=category_id).one()
     bookToDelete = session.query(CategoryItem).filter_by(id=book_id).one()
+    if bookToDelete.user_id != login_session['user_id']:
+        return ("<script>function myFunction() "
+                "{ alert('You are not authorized to delete this book. "
+                "You can only delete the book within category that you have "
+                "created');"
+                "setTimeout(function() {history.go(-1);}, 100);}"
+                "</script><body onload='myFunction()''>")
     if request.method == 'POST':
         session.delete(bookToDelete)
         flash('Book %s Successfully Deleted' % bookToDelete.name)

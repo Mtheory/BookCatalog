@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from database_setup import Category, Base, CategoryItem
+from database_setup import Category, Base, CategoryItem, User
 
 engine = create_engine('sqlite:///catalog.db')
 Base.metadata.bind = engine
@@ -9,12 +9,18 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
+# create user
+User1 = User(name="Sylwester Stallone", email="s_stallone@gmail.com.com")
+session.add(User1)
+session.commit()
+
 # Category 1
-category1 = Category(name="Science Fiction")
+category1 = Category(user_id=1, name="Science Fiction")
 session.add(category1)
 session.commit()
 
 categoryItem1 = CategoryItem(
+    user_id=1,
     name="Foundation and Empire",
     author="Isaac Asimov",
     description="Foundation and Empire is the story of first contact"
@@ -24,6 +30,7 @@ session.add(categoryItem1)
 session.commit()
 
 categoryItem2 = CategoryItem(
+    user_id=1,
     name="Valis",
     author="Philip K Dick",
     description="Part science fiction, part theological detective story in"
@@ -34,6 +41,7 @@ session.add(categoryItem2)
 session.commit()
 
 categoryItem3 = CategoryItem(
+    user_id=1,
     name="The Man in the High Castle",
     author="Philip Dick",
     description="This is an alternate history of America. The Nazis and "
@@ -45,11 +53,12 @@ session.commit()
 
 
 # Category 2
-category1 = Category(name="Classics")
+category1 = Category(user_id=1, name="Classics")
 session.add(category1)
 session.commit()
 
 categoryItem1 = CategoryItem(
+    user_id=1,
     name="1984",
     author="George Orwell",
     description="Totalitarian world which demands absolute obedience and"
@@ -60,6 +69,7 @@ session.add(categoryItem1)
 session.commit()
 
 categoryItem2 = CategoryItem(
+    user_id=1,
     name="A Christmas Carol",
     author="Charles Dickens",
     description="Tells the story of Ebenezer Scrooge, an old miser who is "
@@ -70,6 +80,7 @@ session.add(categoryItem2)
 session.commit()
 
 categoryItem3 = CategoryItem(
+    user_id=1,
     name="Lord of the Flies",
     author="William Golding",
     description="A plane crashes on an uninhabited island and the only "
@@ -79,6 +90,7 @@ session.add(categoryItem3)
 session.commit()
 
 categoryItem4 = CategoryItem(
+    user_id=1,
     name="The Trouble with Goats and Sheep",
     author="Joanna Cannon",
     description="Part whodunnit, part coming of age, this is a gripping "
@@ -89,11 +101,12 @@ session.commit()
 
 
 # Category 3
-category1 = Category(name="Historical")
+category1 = Category(user_id=1, name="Historical")
 session.add(category1)
 session.commit()
 
 categoryItem1 = CategoryItem(
+    user_id=1,
     name="Fools and Mortals",
     author="Bernard Cornwell",
     description="Shakespeare dreams of a glittering career in one of the "
@@ -104,6 +117,7 @@ session.add(categoryItem1)
 session.commit()
 
 categoryItem2 = CategoryItem(
+    user_id=1,
     name="Daughters of the Night Sky",
     author="Aimie K. Runyan",
     description="Russia, 1941. Katya Ivanova is a young pilot in a far-flung"
@@ -113,6 +127,7 @@ session.add(categoryItem2)
 session.commit()
 
 categoryItem3 = CategoryItem(
+    user_id=1,
     name="The Last Tudor",
     author="Philippa Gregory",
     description="Jane Grey was queen of England for nine days. Popular"
@@ -123,6 +138,7 @@ session.add(categoryItem3)
 session.commit()
 
 categoryItem4 = CategoryItem(
+    user_id=1,
     name="The Tiger's Prey",
     author="Wilbur Smith",
     description="The Malabar coast is full of dangers: greedy tradesmen,"
@@ -133,6 +149,7 @@ session.add(categoryItem4)
 session.commit()
 
 categoryItem5 = CategoryItem(
+    user_id=1,
     name="Orphan Girl",
     author="Maggie Hope",
     description="Lorinda is only a child when tragedy deprives her of her "
@@ -144,11 +161,12 @@ session.commit()
 
 
 # Category 4
-category1 = Category(name="Horror")
+category1 = Category(user_id=1, name="Horror")
 session.add(category1)
 session.commit()
 
 categoryItem1 = CategoryItem(
+    user_id=1,
     name="Necronomicon: The Best Weird Tales of H.P. Lovecraft",
     author="H.P. Lovecraft",
     description="H.P. Lovecraft's tales of the tentacled Elder God Cthulhu"
@@ -158,6 +176,7 @@ session.add(categoryItem1)
 session.commit()
 
 categoryItem2 = CategoryItem(
+    user_id=1,
     name="The Outsider",
     author="Stephen King",
     description="When an eleven-year-old boy is found murdered, forensic "
@@ -168,6 +187,7 @@ session.add(categoryItem2)
 session.commit()
 
 categoryItem3 = CategoryItem(
+    user_id=1,
     name="Sleeping Beauties",
     author="Stephen King",
     description="All around the world, something is happening to women when"
@@ -178,6 +198,7 @@ session.add(categoryItem3)
 session.commit()
 
 categoryItem4 = CategoryItem(
+    user_id=1,
     name="Dr Jekyll and Mr Hyde",
     author="Robert Louis Stevenson",
     description="In seeking to discover his inner self, the brilliant Dr "
@@ -187,6 +208,7 @@ session.add(categoryItem4)
 session.commit()
 
 categoryItem5 = CategoryItem(
+    user_id=1,
     name="The Night Circus",
     author="Erin Morgenstern",
     description="The circus arrives without warning. No announcements precede"
@@ -196,6 +218,7 @@ session.add(categoryItem5)
 session.commit()
 
 categoryItem6 = CategoryItem(
+    user_id=1,
     name="The Daylight War",
     author="Peter V. Brett",
     description="The DAYLIGHT WAR is book three of the Demon Cycle, pulling "
@@ -205,11 +228,12 @@ session.add(categoryItem6)
 session.commit()
 
 # Category 5
-category1 = Category(name="Psychology")
+category1 = Category(user_id=1, name="Psychology")
 session.add(category1)
 session.commit()
 
 categoryItem1 = CategoryItem(
+    user_id=1,
     name="The Dalai Lama's Cat",
     author="David Michie",
     description="Dalai Lama's cat discovers how instead of trying to change "
@@ -220,6 +244,7 @@ session.add(categoryItem1)
 session.commit()
 
 categoryItem2 = CategoryItem(
+    user_id=1,
     name="The Unconsoled",
     author="Kazuo Ishiguro",
     description="Ishiguro's extraordinary and original study of a man whose "
@@ -231,6 +256,7 @@ session.add(categoryItem2)
 session.commit()
 
 categoryItem3 = CategoryItem(
+    user_id=1,
     name="The Red Book: Liber Novus",
     author="C. G. Jung",
     description="The Red Book, much like the handcrafted -Books of Hours- "
@@ -242,6 +268,7 @@ session.add(categoryItem3)
 session.commit()
 
 categoryItem4 = CategoryItem(
+    user_id=1,
     name="Psychology",
     author="G Neil Martin",
     description="Now in its fifth edition, the ever popular Psychology is a"
@@ -252,6 +279,7 @@ session.add(categoryItem4)
 session.commit()
 
 categoryItem5 = CategoryItem(
+    user_id=1,
     name="Dream Psychology: Psychoanalysis for Beginners",
     author="Sigmund Freud",
     description="Sigmund Freud's classic book for non-professionals describing"
@@ -262,6 +290,7 @@ session.add(categoryItem5)
 session.commit()
 
 categoryItem6 = CategoryItem(
+    user_id=1,
     name="The Power Of Your Subconscious Mind",
     author="Joseph Murphy",
     description="This book will give you the key to the most awesome power "
@@ -271,6 +300,7 @@ session.add(categoryItem6)
 session.commit()
 
 categoryItem7 = CategoryItem(
+    user_id=1,
     name="The Critique of Pure Reason",
     author="Immanuel Kant",
     description="The Critique of Pure Reason, published by Immanuel Kant in "
@@ -282,11 +312,12 @@ session.commit()
 
 
 # Category 6
-category1 = Category(name="Religion")
+category1 = Category(user_id=1, name="Religion")
 session.add(category1)
 session.commit()
 
 categoryItem1 = CategoryItem(
+    user_id=1,
     name="A Monk's Guide to a Clean House and Mind",
     author="Shoukei Matsumoto",
     description="In this Japanese bestseller a Buddhist monk explains the "
@@ -297,6 +328,7 @@ session.add(categoryItem1)
 session.commit()
 
 categoryItem2 = CategoryItem(
+    user_id=1,
     name="The Book of Joy",
     author="Dalai Lama & D.Tutu",
     description="Dalai Lama and Archbishop Desmond Tutu, share their wisdom "
@@ -306,6 +338,7 @@ session.add(categoryItem2)
 session.commit()
 
 categoryItem3 = CategoryItem(
+    user_id=1,
     name="Unshakeable",
     author="Christine Caine",
     description="In this daily devotional Christine Caine encourages you to "
@@ -315,6 +348,7 @@ session.add(categoryItem3)
 session.commit()
 
 categoryItem4 = CategoryItem(
+    user_id=1,
     name="A History of Judaism",
     author="Martin Goodman",
     description="Judaism is by some distance the oldest of the three Abrahamic"
@@ -325,11 +359,12 @@ session.commit()
 
 
 # Category 7
-category1 = Category(name="Scientific")
+category1 = Category(user_id=1, name="Scientific")
 session.add(category1)
 session.commit()
 
 categoryItem1 = CategoryItem(
+    user_id=1,
     name="Astrophysics for People in a Hurry",
     author="M. Tyson",
     description="Tyson has told the story of our Universe magnificently in"
@@ -339,6 +374,7 @@ session.add(categoryItem1)
 session.commit()
 
 categoryItem2 = CategoryItem(
+    user_id=1,
     name="A Brief History Of Time: From Big Bang To Black Holes",
     author="Stephen Hawking",
     description="Was there a beginning of time? Could time run backwards?"
@@ -348,6 +384,7 @@ session.add(categoryItem2)
 session.commit()
 
 categoryItem3 = CategoryItem(
+    user_id=1,
     name="Relativity: The Special and the General Theory",
     author="Albert Einstain",
     description="2010 Reprint of 1920 First English Edition.",
@@ -357,11 +394,12 @@ session.commit()
 
 
 # Category 8
-category1 = Category(name="Biography")
+category1 = Category(user_id=1, name="Biography")
 session.add(category1)
 session.commit()
 
 categoryItem1 = CategoryItem(
+    user_id=1,
     name="My Inventions: and Other Writings",
     author="Nicola Tesla",
     description="The Croatian-American inventor recounts the story of his "
@@ -374,6 +412,7 @@ session.add(categoryItem1)
 session.commit()
 
 categoryItem2 = CategoryItem(
+    user_id=1,
     name="Leonardo Da Vinci",
     author="Walter Isaacson",
     description="Infinitely curious, easily distracted, vain and vegetarian, "

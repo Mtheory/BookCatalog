@@ -38,4 +38,25 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Delete Category</h4>
+                </div>
+                <div class="modal-body">
+                    <p>WARNING : Delete will erase <strong>{{book.name}}</strong> book </p>
+                </div>
+                <div class="modal-footer">
+                    <form class="form-inline" action="{{url_for('deleteBook', category_id = category.id, book_id = book.id)}}"  method = "post">
+                    <button type="submit" class="btn btn-danger" id="submit">Delete</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Return</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

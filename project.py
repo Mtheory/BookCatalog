@@ -187,6 +187,7 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
+
 # creates a new user in our database extracting all of the fields necessary
 # from login_session to populate all the values required. In Next
 # step returns the user ID of new user created.
@@ -198,10 +199,12 @@ def createUser(login_session):
     user = session.query(User).filter_by(email=login_session['email']).one()
     return user.id
 
+
 # returns the user object associated with user_id given as an argument
 def getUserInfo(user_id):
     user = session.query(User).filter_by(id=user_id).one()
     return user
+
 
 # returns user ID  if email in the argument is recorded in User tabl
 # if not then returns none.
@@ -212,11 +215,13 @@ def getUserID(email):
     except:
         return None
 
+
 # JSON APIs to view Catalog/Category Information
 @app.route('/catalog/JSON')
 def categoriesJSON():
     catalog = session.query(Category).order_by(asc(Category.id))
     return jsonify(Catalog=[c.serialize for c in catalog])
+
 
 @app.route('/catalog/usersJSON')
 def usersJSON():
@@ -230,6 +235,7 @@ def categoryBooksJSON(category_id):
     itemsList = session.query(CategoryItem).filter_by(
                 category_id=category_id).all()
     return jsonify(CategoryItem=[i.serialize for i in itemsList])
+
 
 # Show all categories
 @app.route('/')
@@ -320,7 +326,8 @@ def deleteCategory(category_id):
     if 'username' not in login_session:
         return redirect('/login')
 
-    selectedCategory = session.query(Category).filter_by(id=category_id).one()
+    selectedCategory = session.query(Category).filter_by(
+                       id=category_id).first()
     if selectedCategory.user_id != login_session['user_id']:
         return ("<script>function myFunction() "
                 "{ alert('You are not authorized to delete this category. "
@@ -343,11 +350,12 @@ def addBook(category_id):
     selectedCategory = session.query(Category).filter_by(id=category_id).one()
     if selectedCategory.user_id != login_session['user_id']:
         return ("<script>function myFunction() " +
-               "{ alert('You are not authorized to add a book to this category."
-               "You can only add the book with category "
-               "that you have created');"
-               "setTimeout(function() {history.go(-1);}, 100);}"
-               "</script><body onload='myFunction()''>")
+                "{ alert('You are not authorized to add a book to"
+                " this category."
+                "You can only add the book with category "
+                "that you have created');"
+                "setTimeout(function() {history.go(-1);}, 100);}"
+                "</script><body onload='myFunction()''>")
     if request.method == 'POST':
         newBook = CategoryItem(name=request.form['name'],
                                author=request.form['author'],

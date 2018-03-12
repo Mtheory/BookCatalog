@@ -22,6 +22,7 @@ class User(Base):
             'email': self.email,
         }
 
+
 class Category(Base):
     __tablename__ = 'category'
 
@@ -29,7 +30,8 @@ class Category(Base):
     name = Column(String(250), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
-    books = relationship("CategoryItem", backref="category", passive_deletes=True)
+    books = relationship("CategoryItem", cascade="all,delete",
+                         backref="category")
 
     @property
     def serialize(self):
@@ -48,7 +50,7 @@ class CategoryItem(Base):
     author = Column(String(200), nullable=False)
     description = Column(String(350))
     id = Column(Integer, primary_key=True)
-    category_id = Column(Integer, ForeignKey('category.id', ondelete='CASCADE'))
+    category_id = Column(Integer, ForeignKey("category.id"))
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
